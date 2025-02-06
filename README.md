@@ -1,4 +1,4 @@
-# Distributed Applications
+# MICROFRAMEWORKS
 
 For this project we made a dinamic HTTP server implementation using technologies like Java, JavaScript, CSS, HTML and REST request without using frameworks like Spring Boot, just a simple server. All of this divided by directories.
 
