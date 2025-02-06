@@ -1,13 +1,21 @@
 # Distributed Applications
 
-For this project we made a simple HTTP server implementation using technologies like Java, JavaScript, CSS, HTML and REST request without using frameworks like Spring Boot, just a simple server. All of this divided by directories.
+For this project we made a dinamic HTTP server implementation using technologies like Java, JavaScript, CSS, HTML and REST request without using frameworks like Spring Boot, just a simple server. All of this divided by directories.
 
-![](/images/1.png)
-![](/images/2.png)
+
 
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+![](/images/1.1.png)
+![](/images/1.2.png)
+![](/images/1.3.png)
+![](/images/1.4.png)
+![](/images/2.1.png)
+![](/images/2.2.png)
+![](/images/2.3.png)
+![](/images/2.4.png)
 
 ### Prerequisites
 
@@ -48,7 +56,7 @@ You need to install the following tools to run the project:
 1. First, we need to open a terminal and put the following command to clone the project:
 
     ```
-    git clone https://github.com/JeissonCasallas09/AREP-01-APP-DISTRIBUIDA
+    git clone https://github.com/JeissonCasallas09/AREP-02-MICROFRAMEWORKS
     ```
 2. Open the folder with the project in a new terminal and build it with the following command:
     ```
@@ -66,7 +74,7 @@ You need to install the following tools to run the project:
 
     ![](/images/7.png)
     
-4. Enter from your browser to the local server with port 35000
+4. Enter from your browser to the local server with port 8080
 
  ![](/images/8.png)
 
@@ -75,120 +83,98 @@ You need to install the following tools to run the project:
 
 
 #### Overview
-This project implements a basic HTTP server capable of serving static files, handling REST API requests, and managing content types. Below is a breakdown of the main components, explaining the role of each file and its key methods.
+The architecture of this project is structured into three main components: WebServer, Application, and Static Files. Each of these plays a specific role in handling HTTP requests, processing responses, and serving content.
 
-#### 1️.  HttpServer.java
-✅ Core class that implements the HTTP server.
+![](/images/10.png)
+![](/images/11.png)
 
-🔹 Key responsibilities:
+#### 1. Static Files
+This section includes resources that do not require server-side processing:
 
-   - Listens for client connections on port 35000.
-   - Parses HTTP requests to determine whether to serve a static file or process a REST API request.
-   - Uses the serveFile() method to return static content (HTML, CSS, JS, images).
-   - Implements the helloRestService() method to handle API requests at /app/hello?name=yourname.
-   - Determines MIME types with the getContentType() method.
+* Styles: CSS files for defining the visual appearance of the application.
+* Script: JavaScript files that add client-side interactivity.
+* Index: The main HTML page that serves as the entry point for users.
 
-🔹 Key methods:
+#### 2. WebServer
+This module is responsible for handling HTTP requests and responses. It includes the following key components:
 
-   - main(String[] args) → Starts the server, listens for connections, and processes requests.
-   - serveFile(PrintWriter out, String filePath, String contentType) → Reads and returns the requested static file's content.
-   - getContentType(String file) → Determines the MIME type of a file (HTML, CSS, JS, images, etc.).
-   - helloRestService(String path, String query) → Handles API requests like /app/hello?name=John, returning JSON responses.
+* HttpServer: The core server that processes incoming requests and routes them to the appropriate handlers.
+* HttpRequest: Represents an HTTP request, including the requested URL and any parameters sent.
+* HttpResponse: Handles the response that will be returned to the client, including headers and content.
 
-#### 2️. HttpServerTest.java
-✅ Unit test class that ensures the server behaves correctly.
 
-🔹 Key tests:
+#### 3. Application
+This module represents the backend logic of the web application. It interacts with the WebServer to process application-specific logic and return appropriate responses.
 
-   - testServeStaticFile() → Verifies the server correctly serves an existing HTML file.
-   - testHelloRestService() → Ensures that the /app/hello REST endpoint returns a valid JSON response.
-   - testFileNotFound() → Checks that the server returns a 500 Internal Server Error for non-existent files.
-   - testGetContentTypeHtml(), testGetContentTypeCss(), t testGetContentTypeJs(), testGetContentTypePng() → Validate the MIME type detection.
+#### Communication Flow
 
-#### 3️. index.html (or other static files)
+1. A client sends an HTTP request (e.g., accessing a webpage or an API endpoint).
+2. The HttpServer receives the request and forwards it to the corresponding handler.
+3. If it is an API request, the WebApplication processes the logic and returns a response.
+4. If it is a request for static content (HTML, CSS, JS), the HttpServer retrieves the file and sends it back.
+5. The HttpResponse constructs the HTTP response and sends it to the client.
 
-✅ HTML page served by the server when requested.
-
-🔹 Key role:
-
-   - Rendered in the browser when navigating to /index.html.
-   - Can include CSS and JavaScript files that are also served by the server.
-
-#### 4️. styles.css (or any other CSS file)
-
-✅ Defines the visual style of the HTML files served by the server.
-
-#### 5️. script.js (or other JavaScript files)
-
-✅ Contains JavaScript logic that may interact with the server via AJAX or fetch requests.
+This modular design allows flexibility in handling dynamic API requests while efficiently serving static content.
 
 ## Running the tests
 
 The project includes unit tests to validate the functionality of the HTTP server, ensuring correct behavior when handling static files, REST endpoints, and content types. Below is an explanation of each test:
 
-#### 1. testServeStaticFile()
+#### 1. testPiEndpoint ✅
 
-✅ Purpose: This test verifies that the server correctly serves an existing static file (index.html).
+__Description:__ Verifies that the /pi endpoint correctly returns the value of π.
 
-🔹 Steps:
-  - Sends an HTTP GET request for /index.html.
-  - Reads the server's response.
- - Checks if the response contains HTTP/1.1 200 OK (successful request).
-Ensures the Content-Type is text/html.
+Input: GET request to /pi.
 
-#### 2. testHelloRestService()
-✅ Purpose: This test ensures that the REST endpoint /app/hello returns a valid JSON response when queried.
+Expected Output: Response with status 200 OK and the value 3.141592653589793.
 
-🔹 Steps:
+#### 2. testHelloEndpoint ✅
 
- - Sends an HTTP GET request for /app/hello?name=TestUser.
- - Reads the response.
- - Checks if the response contains HTTP/1.1 200 OK (successful request).
- - Ensures the Content-Type is application/json.
+__Description:__ Verifies that the /hello endpoint returns the message "hello world!".
 
-#### 3. testFileNotFound()
+Input: GET request to /hello.
 
-✅ Purpose: This test checks the error handling when requesting a nonexistent file.
+Expected Output: Response with status 200 OK and the message "hello world!".
 
-🔹 Steps:
-   - Sends an HTTP GET request for /nonexistent.html.
-   - Reads the response.
-   - Verifies that the server responds with HTTP/1.1 500 Internal Server Error.
+#### 3. testHelloGetEndpoint ✅
 
-#### 4. testGetContentTypeHtml()
+__Description:__ Verifies that the /helloget endpoint returns a personalized greeting with the provided name parameter.
 
-✅ Purpose: Ensures that the MIME type detection for HTML files works correctly.
+Input: GET request to /helloget with name=John.
 
-🔹 Steps:
+Expected Output: Response with status 200 OK and the message "Hello John".
 
-   - Calls getContentType("index.html").
-   - Asserts that the return value is "text/html".
+#### 4. testHelloPostEndpoint ✅
 
-#### 5. testGetContentTypeCss()
+__Description:__ Verifies that the /hellopost endpoint returns a personalized greeting with the provided name parameter.
 
-✅ Purpose: Validates that the MIME type detection for CSS files returns the expected value.
+Input: GET request to /hellopost with name=Jane.
 
-🔹 Steps:
+Expected Output: Response with status 200 OK and the message "Hello Jane".
 
-   - Calls getContentType("styles.css").
-   - Checks that it returns "text/css".
+#### 5. testInvalidEndpoint ✅
 
-#### 6️. testGetContentTypeJs()
-✅ Purpose: Ensures that JavaScript files are served with the correct MIME type.
+__Description:__ Verifies that an invalid route returns a 404 Not Found error.
 
-🔹 Steps:
+Input: GET request to /invalid.
 
-   - Calls getContentType("script.js").
-   - Verifies that it returns "application/javascript".
+Expected Output: Response with status 404 Not Found.
 
-#### 7️. testGetContentTypePng()
-✅ Purpose: Tests that image files (.png) are assigned the correct MIME type.
+#### 6. testHelloGetWithoutName ✅
 
-🔹 Steps:
+__Description:__ Verifies the behavior of the /helloget endpoint when the name parameter is not provided.
 
-   - Calls getContentType("image.png").
-   - Ensures that the return value is "image/png".
+Input: GET request to /helloget without parameters.
 
+Expected Output: Response with status 200 OK and the message "Hello null".
+
+#### 7. testResponseContentTypeJson ✅
+
+__Description:__ Verifies that the server response has the application/json content type.
+
+Input: GET request to /hello.
+
+Expected Output: Response with status 200 OK and header Content-Type: application/json.
 
 ![](/images/9.png)
 
@@ -196,21 +182,32 @@ These tests validate the core functionality of the HTTP server, ensuring it prop
 
 ## Conclusions
 
-This project implements a basic HTTP server in Java capable of handling client requests, serving static files, and responding with JSON data. Throughout the development, the following objectives were achieved:
+This project implements a web server in Java with the ability to handle different endpoints and process HTTP requests. Through development and unit testing, the following conclusions have been reached:
 
-✅ Implementation of a basic HTTP server that listens on a specific port and processes client requests.
+__1. Web Server Functionality__
 
-✅ Handling of static files (.html, .css, .js, images, etc.), allowing content to be loaded from a predefined directory.
+* The server successfully handles HTTP GET and POST requests.
+* The route-based structure allows for managing multiple endpoints with dynamic responses.
 
-✅ Detection of content types (MIME types) to serve files with the correct format based on their extensions.
+__2. Handling Request Parameters__
 
-✅ Implementation of a basic REST service (/app/hello?name=XYZ) that responds with dynamic JSON data.
+ * The server can extract and utilize request parameters, enabling personalized responses based on the provided information.
 
-✅ Unit testing with JUnit to validate the correct detection of MIME types for served files.
+__3. HTTP Status Code Management__
 
-✅ Modular code structure, separating file handling logic, HTTP response generation, and server configuration.
+* The server correctly returns HTTP status codes, such as 200 OK for successful responses and 404 Not Found for non-existent routes.
 
-This project served as a foundation for understanding the fundamentals of HTTP servers in Java, socket management, static file handling, and content validation through unit testing. 🚀
+__4. Response Validation__
+
+* Tests confirm that response content matches expectations, validating the functionality of each endpoint.
+
+* The presence of the Content-Type: application/json header ensures proper content interpretation.
+
+__5. Error Handling and Robustness__
+
+* Tests have been implemented to handle scenarios where parameters are missing, ensuring that the server responds in a controlled and predictable manner.
+
+This project provides insights into how an HTTP server works in Java, reinforcing the use of design patterns and best practices in web application development.
 
 
 ## Built With
@@ -227,7 +224,8 @@ versioning made it by [GitHub](http://git-scm.com).
 
 * **Jeisson Steban Casallas Rozo** - [JeissonCasallas09](https://github.com/JeissonCasallas09)
 
-Date: 28/01/2025
+* __Date:__ 06/02/2025
+
 ## License
 
 This project is licensed by ECI.
